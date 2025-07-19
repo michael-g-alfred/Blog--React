@@ -3,7 +3,7 @@ import PhotoName from "./PhotoName";
 
 export default function CreatePostTrigger({ onClick, currentUser }) {
   return (
-    <div className="w-full flex gap-1 rounded-xl p-4 shadow-sm border-2 border-blue-700">
+    <div className="w-full max-w-4xl mx-auto flex gap-1 rounded-xl p-4 shadow-sm border-2 border-blue-700">
       <NavLink to={`/profile/${currentUser?.uid}`}>
         {currentUser.photoURL ? (
           <img
