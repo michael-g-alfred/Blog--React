@@ -353,7 +353,7 @@ export default function Card({ post }) {
           />
         ))}
       </div>
-      <Comments postId={post.id} />
+      {isAuthenticated && <Comments postId={post.id} />}
     </div>
   );
 }
