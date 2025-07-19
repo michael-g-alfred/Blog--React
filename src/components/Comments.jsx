@@ -71,7 +71,7 @@ export default function Comments({ postId }) {
         <button
           type="submit"
           className="text-blue-600 font-semibold cursor-pointer">
-          Post
+          Comment
         </button>
       </form>
       {comments.length > 0 && (
