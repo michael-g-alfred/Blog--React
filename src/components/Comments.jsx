@@ -7,6 +7,7 @@ import {
   onSnapshot,
   deleteDoc,
   doc,
+  getDoc,
 } from "firebase/firestore";
 import { db } from "../services/firebase";
 import { useContext } from "react";
@@ -49,7 +50,13 @@ export default function Comments({ postId }) {
   };
 
   const handleDelete = async (commentId) => {
-    await deleteDoc(doc(db, "posts", postId, "comments", commentId));
+    const commentRef = doc(db, "posts", postId, "comments", commentId);
+    const commentSnap = await getDoc(commentRef);
+    if (commentSnap.exists()) {
+      const commentData = commentSnap.data();
+      if (commentData.user.uid !== currentUser.uid) return;
+      await deleteDoc(commentRef);
+    }
   };
 
   return (
@@ -101,11 +108,13 @@ export default function Comments({ postId }) {
                   {comment.text}
                 </div>
               </div>
-              <button
-                onClick={() => handleDelete(comment.id)}
-                className="text-red-600 hover:text-red-500 text-2xl cursor-pointer">
-                <TrashIcon />
-              </button>
+              {currentUser?.uid === comment.user.uid && (
+                <button
+                  onClick={() => handleDelete(comment.id)}
+                  className="text-red-600 hover:text-red-500 text-2xl cursor-pointer">
+                  <TrashIcon />
+                </button>
+              )}
             </div>
           ))}
         </div>
