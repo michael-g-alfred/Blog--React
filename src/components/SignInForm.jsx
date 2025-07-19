@@ -45,7 +45,7 @@ export default function SignInForm() {
       await signin(formData.email, formData.password);
       navigate("/");
     } catch (error) {
-      console.error("Login error:", error.message);
+      setLocalError(error.message || "Login failed. Please try again.");
     } finally {
       setLoading(false);
     }

@@ -66,7 +66,7 @@ export default function SignUpForm() {
       );
       navigate("/");
     } catch (error) {
-      console.error("Registration error:", error.message);
+      setLocalError(error.message || "Registration failed. Please try again.");
     } finally {
       setLoading(false);
     }
