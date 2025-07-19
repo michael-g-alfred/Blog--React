@@ -8,7 +8,6 @@ import {
   collection,
 } from "firebase/firestore";
 import { db } from "../services/firebase";
-import PhotoName from "./PhotoName";
 import Comments from "./Comments";
 import LikeIcon from "../icons/LikeIcon";
 import ShareIcon from "../icons/ShareIcon";
@@ -21,6 +20,7 @@ import BookmarkIcon from "../icons/BookmarkIcon";
 import { AuthContext } from "../context/AuthProvider";
 import { usePostContext } from "../context/PostContext";
 import PanelLayout from "../layout/PanelLayout";
+import UserPostedName from "./UserPostedName";
 
 export default function Card({ post }) {
   // Formats large counts into readable strings, e.g., 1.2K, 3.4M, or empty if zero
@@ -272,7 +272,7 @@ export default function Card({ post }) {
             />
           ) : (
             <div className="min-w-12 h-12 flex justify-center items-center bg-gray-300 border-1 border-gray-700 text-gray-700 text-sm rounded-full">
-              <PhotoName />
+              <UserPostedName user={post.userPosted} />
             </div>
           )}
           <div className="flex flex-col">
