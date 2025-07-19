@@ -91,7 +91,7 @@ export default function Home() {
         </div>
       )}
 
-      <div className="grid grid-cols-1  gap-4">
+      <div className="grid grid-cols-1 gap-4 w-full max-w-2xl mx-auto">
         {filteredPosts.map((post) => (
           <Card key={post.id} post={post} />
         ))}
