@@ -3,6 +3,7 @@ import InputField from "../components/InputField";
 import { AuthContext } from "../context/AuthProvider";
 import Loader from "../components/Loader";
 import { useNavigate } from "react-router";
+import { uploadImageToCloudinary } from "../services/cloudinary";
 
 export default function SignUpForm() {
   const { signup } = useContext(AuthContext);
@@ -54,22 +55,7 @@ export default function SignUpForm() {
     try {
       let avatarUrl = null;
       if (formData.avatar) {
-        const CLOUDINARY_UPLOAD_PRESET = "profile-pics";
-        const CLOUDINARY_CLOUD_NAME = "dpndvovax";
-        const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
-
-        const data = new FormData();
-        data.append("file", formData.avatar);
-        data.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
-        data.append("cloud_name", CLOUDINARY_CLOUD_NAME);
-
-        const res = await fetch(CLOUDINARY_URL, {
-          method: "POST",
-          body: data,
-        });
-
-        const file = await res.json();
-        avatarUrl = file.secure_url;
+        avatarUrl = await uploadImageToCloudinary(formData.avatar);
       }
 
       await signup(
