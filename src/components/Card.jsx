@@ -344,8 +344,8 @@ export default function Card({ post }) {
         </p>
       </div>
 
-      {/* Action Buttons: Like, Save with counts and styling */}
-      <div className="flex justify-around gap-2 py-2 px-4 text-sm">
+      {/* Action Buttons: Like, Share, Save with counts and styling */}
+      <div className="flex justify-around gap-2 px-4 py-2 text-sm">
         {interactionButtons.map((btn) => (
           <IconTitleBtn
             key={btn.key}

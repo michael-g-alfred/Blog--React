@@ -16,13 +16,13 @@ export default function Floatingbar({ selectedTab, onSelectTab }) {
   ];
 
   return (
-    <div className="fixed bottom-4 left-1/2 -translate-x-1/2 w-[95vw] max-w-sm sm:max-w-md lg:max-w-lg flex justify-center items-center gap-1 p-1 rounded-xl border-3 border-b-6 border-blue-900 backdrop-blur-xs bg-blue-50/70 overflow-hidden">
+    <div className="fixed bottom-4 left-1/2 -translate-x-1/2 w-full max-w-md flex justify-center items-center gap-1 p-1 rounded-xl border-2 border-b-3 border-blue-900 backdrop-blur-xs bg-blue-50/20 overflow-hidden">
       {buttons.map((btn, index) => (
         <IconTitleBtn
           key={index}
           h4={btn.h4}
           svg={btn.svg}
-          className={`${
+          className={`px-3 py-2 ${
             selectedTab === btn.h4
               ? "bg-blue-950 text-blue-50"
               : "bg-blue-700 text-blue-50 hover:bg-blue-500"

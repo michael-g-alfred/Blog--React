@@ -42,15 +42,18 @@ export default function EllipsisPanel({
   return (
     <>
       {buttons.map((btn, index) => (
-        <IconTitleBtn
-          key={index}
-          h4={btn.h4}
-          svg={btn.svg}
-          position="center"
-          onClick={btn.onClick}
-          className="w-full flex items-center justify-center gap-1 p-2 hover:shadow-xs text-sm rounded-md bg-blue-700    
-                            text-blue-50 hover:bg-blue-500 cursor-pointer hr"
-        />
+        <div key={index}>
+          <IconTitleBtn
+            h4={btn.h4}
+            svg={btn.svg}
+            position="center"
+            onClick={btn.onClick}
+            className="w-full flex items-center justify-center px-4 py-2 hover:shadow-xs text-sm rounded-md bg-blue-700 text-blue-50 hover:bg-blue-500 cursor-pointer"
+          />
+          {index < buttons.length - 1 && (
+            <hr className="mt-1 mb-.5 border-.5 rounded border-gray-300" />
+          )}
+        </div>
       ))}
     </>
   );
