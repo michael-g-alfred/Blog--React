@@ -3,8 +3,14 @@ import TrashIcon from "../icons/TrashIcon";
 import PanelLayout from "../layout/PanelLayout";
 import { deleteDoc, doc } from "firebase/firestore";
 import { db } from "../services/firebase";
+import EditIcon from "../icons/EditIcon";
 
-export default function EllipsisPanel({ postId, dispatch, setPanelOpen }) {
+export default function EllipsisPanel({
+  postId,
+  dispatch,
+  setPanelOpen,
+  setIsEditing,
+}) {
   const handleDelete = async () => {
     try {
       await deleteDoc(doc(db, "posts", postId));
@@ -15,9 +21,19 @@ export default function EllipsisPanel({ postId, dispatch, setPanelOpen }) {
     }
   };
 
+  const handleEdit = () => {
+    setIsEditing(true);
+    setPanelOpen(false);
+  };
+
   const buttons = [
     {
-      h4: "Delete",
+      h4: "Edit Post",
+      svg: <EditIcon />,
+      onClick: handleEdit,
+    },
+    {
+      h4: "Delete Post",
       svg: <TrashIcon />,
       onClick: handleDelete,
     },
@@ -33,7 +49,7 @@ export default function EllipsisPanel({ postId, dispatch, setPanelOpen }) {
           position="center"
           onClick={btn.onClick}
           className="w-full flex items-center justify-center gap-1 p-2 hover:shadow-xs text-sm rounded-md bg-blue-700    
-                            text-blue-50 hover:bg-blue-500 cursor-pointer"
+                            text-blue-50 hover:bg-blue-500 cursor-pointer hr"
         />
       ))}
     </>

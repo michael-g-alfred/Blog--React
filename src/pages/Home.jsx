@@ -56,7 +56,7 @@ export default function Home() {
         email: currentUser?.email || "",
         photoURL: currentUser?.photoURL || "",
       },
-      submittedAt: new Date().toISOString(),
+      submittedAt: new Date().toISOString().split("T")[0],
       likes: [],
       shares: [],
       saves: [],

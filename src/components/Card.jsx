@@ -1,4 +1,5 @@
 import { useState, useEffect, useContext, useRef } from "react";
+import EditPostForm from "./EditPostForm";
 import {
   doc,
   updateDoc,
@@ -37,6 +38,7 @@ export default function Card({ post }) {
   const { dispatch } = usePostContext();
 
   const [panelOpen, setPanelOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const panelRef = useRef(null);
 
   // Initialize states based on post data and current user
@@ -259,6 +261,10 @@ export default function Card({ post }) {
 
   if (!post) return null;
 
+  if (isEditing) {
+    return <EditPostForm post={post} setIsEditing={setIsEditing} />;
+  }
+
   return (
     <div className="flex flex-col bg-gray-50 rounded-lg shadow-xs">
       {/* Header: User info, timestamp, and ellipsis menu */}
@@ -308,6 +314,7 @@ export default function Card({ post }) {
                 postId={post.id}
                 dispatch={dispatch}
                 setPanelOpen={setPanelOpen}
+                setIsEditing={setIsEditing}
               />
             </PanelLayout>
           </div>

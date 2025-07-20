@@ -1,22 +1,24 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import InputField from "../components/InputField";
 import Loader from "../components/Loader";
 import FormLayout from "../layout/FormLayout";
 import TrashIcon from "../icons/TrashIcon";
 import CloseIcon from "../icons/CloseIcon";
 import { uploadImageToCloudinary } from "../services/cloudinary";
+import { doc, updateDoc } from "firebase/firestore";
+import { db } from "../services/firebase";
 
-export default function PostForm({ onClose, onAddPost }) {
-  const [newPost, setNewPost] = useState({
-    title: "",
-    details: "",
-    files: [],
+export default function EditPostForm({ post, setIsEditing }) {
+  const [updatedPost, setUpdatedPost] = useState({
+    title: post.title,
+    details: post.details,
+    files: post.files || [],
   });
   const [error, setError] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
 
   const handleInputChange = (field, value) => {
-    setNewPost((prev) => ({ ...prev, [field]: value }));
+    setUpdatedPost((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleFileUpload = async (e) => {
@@ -38,7 +40,7 @@ export default function PostForm({ onClose, onAddPost }) {
         })
       );
 
-      setNewPost((prev) => ({
+      setUpdatedPost((prev) => ({
         ...prev,
         files: [...prev.files, ...uploadedFiles],
       }));
@@ -51,42 +53,60 @@ export default function PostForm({ onClose, onAddPost }) {
   };
 
   const removeFile = (index) => {
-    setNewPost((prev) => ({
+    setUpdatedPost((prev) => ({
       ...prev,
       files: prev.files.filter((_, i) => i !== index),
     }));
+  };
+
+  const handleUpdatePost = async () => {
+    try {
+      const postRef = doc(db, "posts", post.id);
+      await updateDoc(postRef, {
+        title: updatedPost.title,
+        details: updatedPost.details,
+        files: updatedPost.files,
+      });
+      setIsEditing(false);
+      window.location.reload();
+    } catch (err) {
+      console.error("Failed to update post:", err);
+      setError("An error occurred while updating the post.");
+    }
   };
 
   return (
     <FormLayout>
       <div className="flex justify-end">
         <button
-          onClick={onClose}
+          onClick={() => setIsEditing(false)}
           className="p-2 text-red-700 hover:bg-red-500 hover:text-red-50 font-bold rounded-full focus:outline-none"
           aria-label="Close form">
           <CloseIcon />
         </button>
       </div>
+
       <InputField
         id="title"
         label="Title"
-        value={newPost.title}
+        value={updatedPost.title}
         onChange={(e) => handleInputChange("title", e.target.value)}
       />
 
       <InputField
         id="details"
         label="Details"
-        value={newPost.details}
+        value={updatedPost.details}
         onChange={(e) => handleInputChange("details", e.target.value)}
         type="textarea"
       />
       <div className="flex justify-between text-sm text-gray-700">
         <span>Minimum 50 characters required</span>
-        <span className={newPost.details.length < 50 ? "text-red-600" : ""}>
-          {newPost.details.length}/50
+        <span className={updatedPost.details.length < 50 ? "text-red-600" : ""}>
+          {updatedPost.details.length}/50
         </span>
       </div>
+
       <div className="flex flex-col gap-1">
         <InputField
           id="files"
@@ -96,14 +116,14 @@ export default function PostForm({ onClose, onAddPost }) {
           accept="image/*"
         />
 
-        {(newPost.files?.length > 0 || isUploading) && (
+        {(updatedPost.files?.length > 0 || isUploading) && (
           <div className="flex flex-col gap-1 border-2 border-gray-900 p-2 rounded-lg">
             {isUploading && (
               <div className="w-full flex justify-center items-center text-blue-700 text-sm font-medium">
                 <Loader />
               </div>
             )}
-            {newPost.files.map((file) => (
+            {updatedPost.files.map((file) => (
               <div
                 key={file.name}
                 className="w-full px-3 py-2 border-2 border-dashed border-gray-700 text-gray-900 rounded-md flex justify-between items-center">
@@ -117,7 +137,7 @@ export default function PostForm({ onClose, onAddPost }) {
                   </a>
                 </div>
                 <button
-                  onClick={() => removeFile(newPost.files.indexOf(file))}
+                  onClick={() => removeFile(updatedPost.files.indexOf(file))}
                   className="text-red-600 hover:text-red-500 text-md">
                   <TrashIcon />
                 </button>
@@ -131,15 +151,15 @@ export default function PostForm({ onClose, onAddPost }) {
 
       <div className="flex gap-2">
         <button
-          onClick={() => onAddPost(newPost)}
+          onClick={handleUpdatePost}
           disabled={
-            !newPost.title ||
-            newPost.details.length < 50 ||
-            newPost.files.length === 0
+            !updatedPost.title ||
+            updatedPost.details.length < 50 ||
+            updatedPost.files.length === 0
           }
-          type="submit"
-          className="flex-1 font-bold bg-blue-700 text-blue-50 py-3 px-4 rounded-md hover:bg-blue-500 disabled:bg-gray-700 disabled:cursor-not-allowed  transition-colors duration-200 cursor-pointer">
-          Post
+          type="button"
+          className="flex-1 font-bold bg-blue-700 text-blue-50 py-3 px-4 rounded-md hover:bg-blue-500 disabled:bg-gray-700 disabled:cursor-not-allowed transition-colors duration-200 cursor-pointer">
+          Update
         </button>
       </div>
     </FormLayout>
